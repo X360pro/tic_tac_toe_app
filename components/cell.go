@@ -1,6 +1,9 @@
 package components
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Cell struct {
 	Mark string
@@ -19,12 +22,11 @@ func NewCell() *Cell {
 func (c *Cell) GetMark() {
 	fmt.Print(" ", c.Mark, " ")
 }
-func (c *Cell) SetMark(mark string) bool {
+func (c *Cell) SetMark(mark string) error {
 	if c.Mark != NoMark {
-		fmt.Println("Cell is not empty")
-		return false
+		return errors.New("Cell is not empty")
 	} else {
 		c.Mark = mark
-		return true
 	}
+	return nil
 }
