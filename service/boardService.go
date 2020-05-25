@@ -14,12 +14,8 @@ func NewBoardService() *BoardService {
 }
 
 func (b *BoardService) Mark(position int, mark string) {
-	b.Cells[position].SetMark(mark)
-	for i := 0; i < 9; i++ {
-		b.Cells[i].GetMark()
-		if i%3 == 2 {
-			fmt.Print("\n")
-		}
+	err := b.Cells[position].SetMark(mark)
+	if err != nil {
+		fmt.Print(err)
 	}
-	fmt.Print("\n")
 }
