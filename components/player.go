@@ -1,7 +1,7 @@
 package components
 
 type Player struct {
-	myMark string
+	Mark string
 	Name   string
 }
 
