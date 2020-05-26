@@ -2,7 +2,6 @@ package components
 
 import (
 	"errors"
-	"fmt"
 )
 
 type Cell struct {
@@ -19,8 +18,8 @@ func NewCell() *Cell {
 	return &Cell{Mark: NoMark}
 }
 
-func (c *Cell) GetMark() {
-	fmt.Print(" ", c.Mark, " ")
+func (c *Cell) GetMark() string {
+	return c.Mark
 }
 func (c *Cell) SetMark(mark string) error {
 	if c.Mark != NoMark {
