@@ -6,5 +6,5 @@ type Player struct {
 }
 
 func CreatePlayer(name, mark string) *Player {
-	return &Player{myMark: mark, Name: name}
+	return &Player{Mark: mark, Name: name}
 }
