@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestCell(t *testing.T) {
+func TestBoard(t *testing.T) {
 	var list = []struct {
 		board_size           uint8
 		expexted_no_of_cells int
