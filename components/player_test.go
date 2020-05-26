@@ -4,17 +4,17 @@ import (
 	"testing"
 )
 
-func TestCell(t *testing.T) {
+func TestPlayer(t *testing.T) {
 	var list = []struct {
 		name     string
 		mark     string
 		expected Player
 	}{
-		{"abhishek", "X", Player{myMark: "X", Name: "abhishek"}},
-		{"ayushman", "O", Player{myMark: "O", Name: "ayushman"}},
-		{"Tushhar", "X", Player{myMark: "X", Name: "Tushhar"}},
-		{"Devesh", "X", Player{myMark: "X", Name: "Devesh"}},
-		{"Eshan", "O", Player{myMark: "O", Name: "Eshan"}},
+		{"abhishek", "X", Player{Mark: "X", Name: "abhishek"}},
+		{"ayushman", "O", Player{Mark: "O", Name: "ayushman"}},
+		{"Tushhar", "X", Player{Mark: "X", Name: "Tushhar"}},
+		{"Devesh", "X", Player{Mark: "X", Name: "Devesh"}},
+		{"Eshan", "O", Player{Mark: "O", Name: "Eshan"}},
 	}
 	for _, str := range list {
 		actual := CreatePlayer(str.name, str.mark)
