@@ -2,7 +2,6 @@ package service
 
 import (
 	"components"
-	"fmt"
 )
 
 type BoardService struct {
@@ -13,9 +12,19 @@ func NewBoardService() *BoardService {
 	return &BoardService{components.NewBoard(3)}
 }
 
-func (b *BoardService) Mark(position int, mark string) {
-	err := b.Cells[position].SetMark(mark)
+func (b *BoardService) PutMarkInPosition(position uint8, player components.Player) error {
+	err := b.Cells[position].SetMark(player.Mark)
 	if err != nil {
-		fmt.Print(err)
+		return err
 	}
+	return nil
+}
+
+func (b *BoardService) CheckBoardIsFull() bool {
+	for i := 0; i < int(b.Size*b.Size); i++ {
+		if b.Cells[i].GetMark() == components.NoMark {
+			return false
+		}
+	}
+	return true
 }
