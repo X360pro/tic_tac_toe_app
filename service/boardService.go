@@ -28,3 +28,13 @@ func (b *BoardService) CheckBoardIsFull() bool {
 	}
 	return true
 }
+func (b *BoardService) PrintBoard() string {
+	out := ""
+	for i := 0; i < int(b.Size*b.Size); i++ {
+		out += b.Cells[i].Mark
+		if i%int(b.Size) == int(b.Size)-1 {
+			out += "\n"
+		}
+	}
+	return out
+}
