@@ -1,5 +1,9 @@
 package service
 
+import (
+	"components"
+)
+
 type ResultService struct {
 	*BoardService
 }
@@ -8,23 +12,23 @@ func NewResultService(boardService *BoardService) *ResultService {
 	return &ResultService{boardService}
 }
 
-func (r *ResultService) CheckRow(mark string) bool {
+func (r *ResultService) checkRow(mark string) bool {
 	//for rows
 	count := 0
 	for i := 0; i < int(r.Size*r.Size); i++ {
-		if count == int(r.Size) {
-			return true
-		}
 		if r.Cells[i].GetMark() == mark {
 			count++
 		}
-		if i+1%int(r.Size) == 0 {
+		if count == int(r.Size) {
+			return true
+		}
+		if i%int(r.Size) == int(r.Size)-1 {
 			count = 0
 		}
 	}
 	return false
 }
-func (r *ResultService) CheckColumn(mark string) bool {
+func (r *ResultService) checkColumn(mark string) bool {
 	//for columns
 	count_col := make([]int, r.Size)
 	for i := 0; i < int(r.Size*r.Size); i++ {
@@ -38,7 +42,7 @@ func (r *ResultService) CheckColumn(mark string) bool {
 	}
 	return false
 }
-func (r *ResultService) CheckLRDiagonal(mark string) bool {
+func (r *ResultService) checkLRDiagonal(mark string) bool {
 	//for LR diagonal
 	count := 0
 	j := 0
@@ -54,11 +58,10 @@ func (r *ResultService) CheckLRDiagonal(mark string) bool {
 	}
 	return false
 }
-func (r *ResultService) CheckRLDiagonal(mark string) bool {
+func (r *ResultService) checkRLDiagonal(mark string) bool {
 	//for RL diagonal
 	count := 0
 	for i := 0; i < int(r.Size); i++ {
-
 		if r.Cells[(i+1)*(int(r.Size)-1)].GetMark() == mark {
 			count++
 		}
@@ -75,4 +78,20 @@ func contains(s []int, e int) bool {
 		}
 	}
 	return false
+}
+
+func (r *ResultService) GiveResult(player *components.Player) string {
+
+	if r.checkRow(player.Mark) {
+		return "win"
+	} else if r.checkColumn(player.Mark) {
+		return "win"
+	} else if r.checkLRDiagonal(player.Mark) {
+		return "win"
+	} else if r.checkRLDiagonal(player.Mark) {
+		return "win"
+	} else if r.CheckBoardIsFull() {
+		return "draw"
+	}
+	return "ongoing"
 }
