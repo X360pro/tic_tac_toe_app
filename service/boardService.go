@@ -8,11 +8,11 @@ type BoardService struct {
 	*components.Board
 }
 
-func NewBoardService() *BoardService {
-	return &BoardService{components.NewBoard(3)}
+func NewBoardService(size int) *BoardService {
+	return &BoardService{components.NewBoard(uint8(size))}
 }
 
-func (b *BoardService) PutMarkInPosition(position uint8, player components.Player) error {
+func (b *BoardService) PutMarkInPosition(position uint8, player *components.Player) error {
 	err := b.Cells[position].SetMark(player.Mark)
 	if err != nil {
 		return err
@@ -28,6 +28,7 @@ func (b *BoardService) CheckBoardIsFull() bool {
 	}
 	return true
 }
+
 func (b *BoardService) PrintBoard() string {
 	out := ""
 	for i := 0; i < int(b.Size*b.Size); i++ {
