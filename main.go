@@ -35,23 +35,22 @@ AGAIN:
 	fmt.Print("For player 1 Enter 1 to take X and anything else to take O : ")
 	mark, _ := reader.ReadString('\n')
 	mark = strings.TrimSpace(mark)
-	var pl_1, pl_2 *components.Player
+	var pl [2]*components.Player
 	if mark == "1" {
-		pl_1 = components.CreatePlayer(name1, "X")
-		pl_2 = components.CreatePlayer(name2, "O")
+		pl[0] = components.CreatePlayer(name1, "X")
+		pl[1] = components.CreatePlayer(name2, "O")
 	} else {
-		pl_1 = components.CreatePlayer(name1, "O")
-		pl_2 = components.CreatePlayer(name2, "X")
+		pl[0] = components.CreatePlayer(name1, "O")
+		pl[1] = components.CreatePlayer(name2, "X")
 	}
 
 	//starting new game
-	newGame := service.NewGameService(pl_1, pl_2, size)
+	newGame := service.NewGameService(pl, size)
 
 	//start playing game
 	var res string
-
 	play := true
-	fmt.Println(pl_1.Name, " your chance ")
+	fmt.Println(pl[0].Name, " your chance ")
 	for {
 		fmt.Print(newGame.PrintBoard())
 		fmt.Print("Enter position : ")
@@ -63,9 +62,9 @@ AGAIN:
 			continue
 		}
 		if play {
-			err, res = newGame.Play(uint8(position), pl_1)
+			err, res = newGame.Play(uint8(position))
 		} else {
-			err, res = newGame.Play(uint8(position), pl_2)
+			err, res = newGame.Play(uint8(position))
 		}
 		if err != nil {
 			fmt.Println(err)
@@ -73,11 +72,11 @@ AGAIN:
 		} else if res == "win" {
 			if play {
 				fmt.Print(newGame.PrintBoard())
-				fmt.Print(pl_1.Name, " has won ")
+				fmt.Print(pl[0].Name, " has won ")
 				break
 			} else {
 				fmt.Print(newGame.PrintBoard())
-				fmt.Print(pl_2.Name, " has won ")
+				fmt.Print(pl[1].Name, " has won ")
 				break
 			}
 		} else if res == "draw" {
@@ -85,9 +84,9 @@ AGAIN:
 			break
 		}
 		if play {
-			fmt.Print(pl_2.Name, " your chance \n")
+			fmt.Print(pl[0].Name, " your chance \n")
 		} else {
-			fmt.Print(pl_1.Name, " your chance \n")
+			fmt.Print(pl[1].Name, " your chance \n")
 		}
 		play = !play
 	}
