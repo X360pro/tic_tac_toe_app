@@ -12,8 +12,8 @@ func NewBoardService(size int) *BoardService {
 	return &BoardService{components.NewBoard(uint8(size))}
 }
 
-func (b *BoardService) PutMarkInPosition(position uint8, player *components.Player) error {
-	err := b.Cells[position].SetMark(player.Mark)
+func (b *BoardService) PutMarkInPosition(position uint8, mark string) error {
+	err := b.Cells[position].SetMark(mark)
 	if err != nil {
 		return err
 	}
