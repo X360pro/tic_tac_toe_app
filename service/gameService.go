@@ -27,13 +27,14 @@ func (g *GameService) Play(pos uint8) (error, string) {
 			return err, "nil"
 		}
 		res = g.GiveResult(g.player[0])
-	} else {
-		err := g.PutMarkInPosition(pos, g.player[1].Mark)
-		if err != nil {
-			return err, "nil"
-		}
-		res = g.GiveResult(g.player[1])
+		turn++
+		return nil, res
 	}
+	err := g.PutMarkInPosition(pos, g.player[1].Mark)
+	if err != nil {
+		return err, "nil"
+	}
+	res = g.GiveResult(g.player[1])
 	turn++
 	return nil, res
 
