@@ -41,7 +41,7 @@ func TestPutMarkInPosition(t *testing.T) {
 		}}, components.Player{Name: "admam", Mark: "X"}},
 	}
 	for _, str := range list {
-		str.expected.PutMarkInPosition(str.position, &str.pl)
+		str.expected.PutMarkInPosition(str.position, str.pl.Mark)
 		if str.expected.Cells[str.position].GetMark() != str.pl.Mark {
 			t.Error("Put mark in position failed")
 		}
