@@ -7,12 +7,11 @@ import (
 
 type GameService struct {
 	*ResultService
-	player1 *components.Player
-	player2 *components.Player
+	player [2]*components.Player
 }
 
-func NewGameService(pl_1, pl_2 *components.Player, size int) *GameService {
-	return &GameService{NewResultService(NewBoardService(size)), pl_1, pl_2}
+func NewGameService(pl [2]*components.Player, size int) *GameService {
+	return &GameService{NewResultService(NewBoardService(size)), pl}
 }
 
 var turn = 0
@@ -23,19 +22,18 @@ func (g *GameService) Play(pos uint8) (error, string) {
 	}
 	var res string
 	if turn%2 == 0 {
-		err := g.PutMarkInPosition(pos, g.player1.Mark)
+		err := g.PutMarkInPosition(pos, g.player[0].Mark)
 		if err != nil {
 			return err, "nil"
 		}
-		res = g.GiveResult(g.player1)
+		res = g.GiveResult(g.player[0])
 	} else {
-		err := g.PutMarkInPosition(pos, g.player2.Mark)
+		err := g.PutMarkInPosition(pos, g.player[1].Mark)
 		if err != nil {
 			return err, "nil"
 		}
-		res = g.GiveResult(g.player1)
+		res = g.GiveResult(g.player[1])
 	}
-
 	turn++
 	return nil, res
 
