@@ -36,7 +36,7 @@ func TestPlay(t *testing.T) {
 	}
 
 	for _, str := range list {
-		err, _ := str.g.Play(str.position, &components.Player{Name: "nil", Mark: "X"})
+		err, _ := str.g.Play(str.position)
 		if err.Error() != str.expected.Error() {
 			t.Error("fail")
 		}
