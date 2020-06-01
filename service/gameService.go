@@ -15,13 +15,28 @@ func NewGameService(pl_1, pl_2 *components.Player, size int) *GameService {
 	return &GameService{NewResultService(NewBoardService(size)), pl_1, pl_2}
 }
 
-func (g *GameService) Play(pos uint8, pl *components.Player) (error, string) {
+var turn = 0
+
+func (g *GameService) Play(pos uint8) (error, string) {
 	if pos < 0 || pos > g.Size*g.Size-1 {
 		return errors.New("Positoin is out of bounds"), "nil"
 	}
-	err := g.PutMarkInPosition(pos, pl)
-	if err != nil {
-		return err, "nil"
+	var res string
+	if turn%2 == 0 {
+		err := g.PutMarkInPosition(pos, g.player1.Mark)
+		if err != nil {
+			return err, "nil"
+		}
+		res = g.GiveResult(g.player1)
+	} else {
+		err := g.PutMarkInPosition(pos, g.player2.Mark)
+		if err != nil {
+			return err, "nil"
+		}
+		res = g.GiveResult(g.player1)
 	}
-	return nil, g.GiveResult(pl)
+
+	turn++
+	return nil, res
+
 }
