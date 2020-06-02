@@ -2,7 +2,7 @@ package service
 
 import (
 	"components"
-	"errors"
+	"log"
 	"testing"
 )
 
@@ -10,35 +10,45 @@ func TestPlay(t *testing.T) {
 	var list = []struct {
 		position uint8
 		g        *GameService
-		expected error
+		err      string
 	}{
-		{9, &GameService{&ResultService{&BoardService{&components.Board{
-			Size: 3,
-			Cells: []*components.Cell{
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-			}}}}, &components.Player{Mark: "X", Name: "yo"}, &components.Player{Mark: "O", Name: "yo"}}, errors.New("Positoin is out of bounds")},
+		{3, &GameService{&ResultService{NewBoardService(3)}, [2]*components.Player{
+			{Name: "abhishek", Mark: components.OMark},
+			{Name: "soham", Mark: components.XMark},
+		}}, "nil"},
+		{7, &GameService{&ResultService{NewBoardService(3)}, [2]*components.Player{
+			{Name: "abhishek", Mark: components.OMark},
+			{Name: "soham", Mark: components.XMark},
+		}}, "nil"},
 		{4, &GameService{&ResultService{&BoardService{&components.Board{
 			Size: 2,
 			Cells: []*components.Cell{
 				{Mark: components.NoMark},
+				{Mark: components.XMark},
 				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
-			}}}}, &components.Player{Mark: "X", Name: "yo"}, &components.Player{Mark: "O", Name: "yo"}}, errors.New("Positoin is out of bounds")},
+				{Mark: components.OMark},
+			}}}}, [2]*components.Player{
+			{Name: "abhishek", Mark: components.OMark},
+			{Name: "soham", Mark: components.XMark},
+		}}, "Positoin is out of bounds"},
 	}
 
 	for _, str := range list {
 		err, _ := str.g.Play(str.position)
-		if err.Error() != str.expected.Error() {
-			t.Error("fail")
+		if err != nil {
+			if err.Error() != str.err {
+				t.Error("errors didn't matched", str.position)
+			}
+		} else if str.g.Cells[str.position].GetMark() != str.g.player[0].Mark {
+			t.Error("mark not matching")
+		}
+		err, _ = str.g.Play(str.position + 1)
+		if err != nil {
+			if err.Error() != str.err {
+				log.Fatal("errors didn't matched")
+			}
+		} else if str.g.Cells[str.position+1].GetMark() != str.g.player[1].Mark {
+			t.Error("mark not matching")
 		}
 	}
 }
