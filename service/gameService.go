@@ -26,7 +26,7 @@ func (g *GameService) Play(pos uint8) (error, string) {
 		if err != nil {
 			return err, "nil"
 		}
-		res = g.GiveResult(g.player[0])
+		res = g.GiveResult(g.player[0], pos)
 		turn++
 		return nil, res
 	}
@@ -34,7 +34,7 @@ func (g *GameService) Play(pos uint8) (error, string) {
 	if err != nil {
 		return err, "nil"
 	}
-	res = g.GiveResult(g.player[1])
+	res = g.GiveResult(g.player[1], pos)
 	turn++
 	return nil, res
 
