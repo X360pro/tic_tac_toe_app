@@ -9,6 +9,7 @@ func TestCheckRow(t *testing.T) {
 	tests := []struct {
 		input    *ResultService
 		mark     string
+		pos      uint8
 		expected bool
 	}{
 		{&ResultService{&BoardService{&components.Board{
@@ -17,11 +18,11 @@ func TestCheckRow(t *testing.T) {
 				{Mark: components.XMark},
 				{Mark: components.XMark},
 				{Mark: components.NoMark},
-				{Mark: components.OMark},
+				{Mark: components.NoMark},
 			},
 		},
 		},
-		}, components.XMark, true},
+		}, components.XMark, 0, true},
 
 		{&ResultService{&BoardService{&components.Board{
 			Size: 3,
@@ -38,41 +39,93 @@ func TestCheckRow(t *testing.T) {
 			},
 		},
 		},
-		}, components.OMark, true},
+		}, components.OMark, 6, true},
+		{&ResultService{&BoardService{&components.Board{
+			Size: 4,
+			Cells: []*components.Cell{
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+
+				{Mark: components.NoMark},
+				{Mark: components.NoMark},
+				{Mark: components.NoMark},
+				{Mark: components.NoMark},
+			},
+		},
+		},
+		}, components.XMark, 10, true},
 	}
 	for _, test := range tests {
-		if test.input.checkRow(test.mark) != test.expected {
+		if test.input.checkRow(test.mark, test.pos) != test.expected {
 			t.Error("check row failed")
 		}
 	}
 }
-
 func TestCheckColumn(t *testing.T) {
 	tests := []struct {
 		input    *ResultService
 		mark     string
+		pos      uint8
 		expected bool
 	}{
 		{&ResultService{&BoardService{&components.Board{
 			Size: 2,
 			Cells: []*components.Cell{
 				{Mark: components.XMark},
-				{Mark: components.OMark},
+				{Mark: components.NoMark},
 				{Mark: components.XMark},
 				{Mark: components.NoMark},
 			},
 		},
 		},
-		}, components.XMark, true},
+		}, components.XMark, 0, true},
 
 		{&ResultService{&BoardService{&components.Board{
 			Size: 3,
 			Cells: []*components.Cell{
 				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.NoMark},
+				{Mark: components.NoMark},
 				{Mark: components.XMark},
 				{Mark: components.OMark},
 				{Mark: components.OMark},
 				{Mark: components.XMark},
+			},
+		},
+		},
+		}, components.XMark, 5, true},
+		{&ResultService{&BoardService{&components.Board{
+			Size: 4,
+			Cells: []*components.Cell{
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+
+				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+
 				{Mark: components.NoMark},
 				{Mark: components.OMark},
 				{Mark: components.NoMark},
@@ -80,10 +133,10 @@ func TestCheckColumn(t *testing.T) {
 			},
 		},
 		},
-		}, components.OMark, true},
+		}, components.OMark, 9, true},
 	}
 	for _, test := range tests {
-		if test.input.checkColumn(test.mark) != test.expected {
+		if test.input.checkColumn(test.mark, test.pos) != test.expected {
 			t.Error("check column failed")
 		}
 	}
@@ -98,26 +151,52 @@ func TestCheckLRDiagonal(t *testing.T) {
 		{&ResultService{&BoardService{&components.Board{
 			Size: 2,
 			Cells: []*components.Cell{
-				{Mark: components.XMark},
 				{Mark: components.OMark},
 				{Mark: components.NoMark},
 				{Mark: components.XMark},
+				{Mark: components.OMark},
 			},
 		},
 		},
-		}, components.XMark, true},
+		}, components.OMark, true},
 
 		{&ResultService{&BoardService{&components.Board{
 			Size: 3,
 			Cells: []*components.Cell{
+				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.NoMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+			},
+		},
+		},
+		}, components.OMark, true},
+		{&ResultService{&BoardService{&components.Board{
+			Size: 4,
+			Cells: []*components.Cell{
 				{Mark: components.XMark},
 				{Mark: components.OMark},
 				{Mark: components.OMark},
-				{Mark: components.NoMark},
 				{Mark: components.XMark},
-				{Mark: components.NoMark},
-				{Mark: components.NoMark},
+
+				{Mark: components.OMark},
 				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+
+				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+
+				{Mark: components.NoMark},
+				{Mark: components.OMark},
+				{Mark: components.NoMark},
 				{Mark: components.XMark},
 			},
 		},
@@ -126,11 +205,10 @@ func TestCheckLRDiagonal(t *testing.T) {
 	}
 	for _, test := range tests {
 		if test.input.checkLRDiagonal(test.mark) != test.expected {
-			t.Error("check LR diagonal failed")
+			t.Error("check LR Diagonal failed", test.input.Size)
 		}
 	}
 }
-
 func TestCheckRLDiagonal(t *testing.T) {
 	tests := []struct {
 		input    *ResultService
@@ -140,10 +218,10 @@ func TestCheckRLDiagonal(t *testing.T) {
 		{&ResultService{&BoardService{&components.Board{
 			Size: 2,
 			Cells: []*components.Cell{
-				{Mark: components.NoMark},
-				{Mark: components.OMark},
-				{Mark: components.OMark},
 				{Mark: components.XMark},
+				{Mark: components.OMark},
+				{Mark: components.OMark},
+				{Mark: components.NoMark},
 			},
 		},
 		},
@@ -152,15 +230,41 @@ func TestCheckRLDiagonal(t *testing.T) {
 		{&ResultService{&BoardService{&components.Board{
 			Size: 3,
 			Cells: []*components.Cell{
-				{Mark: components.NoMark},
+				{Mark: components.OMark},
 				{Mark: components.OMark},
 				{Mark: components.XMark},
 				{Mark: components.NoMark},
 				{Mark: components.XMark},
-				{Mark: components.NoMark},
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+			},
+		},
+		},
+		}, components.XMark, true},
+		{&ResultService{&BoardService{&components.Board{
+			Size: 4,
+			Cells: []*components.Cell{
 				{Mark: components.XMark},
 				{Mark: components.OMark},
 				{Mark: components.OMark},
+				{Mark: components.XMark},
+
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+
+				{Mark: components.OMark},
+				{Mark: components.XMark},
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+
+				{Mark: components.XMark},
+				{Mark: components.OMark},
+				{Mark: components.NoMark},
+				{Mark: components.XMark},
 			},
 		},
 		},
@@ -168,7 +272,7 @@ func TestCheckRLDiagonal(t *testing.T) {
 	}
 	for _, test := range tests {
 		if test.input.checkRLDiagonal(test.mark) != test.expected {
-			t.Error("check RL diagonal failed")
+			t.Error("check RL Diagonal failed", test.input.Size)
 		}
 	}
 }
