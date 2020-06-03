@@ -12,79 +12,49 @@ func NewResultService(boardService *BoardService) *ResultService {
 	return &ResultService{boardService}
 }
 
-func (r *ResultService) checkRow(mark string) bool {
-	//for rows
-	count := 0
-	for i := 0; i < int(r.Size*r.Size); i++ {
-		if r.Cells[i].GetMark() == mark {
-			count++
-		}
-		if count == int(r.Size) {
-			return true
-		}
-		if i%int(r.Size) == int(r.Size)-1 {
-			count = 0
+func (r *ResultService) checkRow(mark string, pos uint8) bool {
+	start := r.Size * (pos / r.Size)
+	for i := start; i < start+r.Size; i++ {
+		if r.Cells[i].GetMark() != mark {
+			return false
 		}
 	}
-	return false
+	return true
 }
-func (r *ResultService) checkColumn(mark string) bool {
-	//for columns
-	count_col := make([]int, r.Size)
-	for i := 0; i < int(r.Size*r.Size); i++ {
-
-		if r.Cells[i].GetMark() == mark {
-			count_col[i%int(r.Size)]++
-		}
-		if contains(count_col, int(r.Size)) {
-			return true
+func (r *ResultService) checkColumn(mark string, pos uint8) bool {
+	start := pos % r.Size
+	for i := start; i < r.Size*r.Size; i += r.Size {
+		if r.Cells[i].GetMark() != mark {
+			return false
 		}
 	}
-	return false
+	return true
 }
 func (r *ResultService) checkLRDiagonal(mark string) bool {
-	//for LR diagonal
-	count := 0
 	j := 0
-	for i := 0; i < int(r.Size); i++ {
-
-		if r.Cells[(i*int(r.Size))+j].GetMark() == mark {
-			count++
-		}
-		if count == int(r.Size) {
-			return true
+	for i := 0; i < int(r.Size*r.Size); i = ((j * int(r.Size)) + j) {
+		if r.Cells[i].GetMark() != mark {
+			return false
 		}
 		j++
 	}
-	return false
+	return true
 }
 func (r *ResultService) checkRLDiagonal(mark string) bool {
-	//for RL diagonal
-	count := 0
-	for i := 0; i < int(r.Size); i++ {
-		if r.Cells[(i+1)*(int(r.Size)-1)].GetMark() == mark {
-			count++
+	j := 1
+	for i := r.Size - 1; i <= r.Size*(r.Size-1); i = (uint8(j) * (r.Size - 1)) {
+		if r.Cells[i].GetMark() != mark {
+			return false
 		}
-		if count == int(r.Size) {
-			return true
-		}
+		j++
 	}
-	return false
+	return true
 }
-func contains(s []int, e int) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
+func (r *ResultService) GiveResult(player *components.Player, pos uint8) string {
 
-func (r *ResultService) GiveResult(player *components.Player) string {
-
-	if r.checkRow(player.Mark) {
+	if r.checkRow(player.Mark, pos) {
 		return "win"
-	} else if r.checkColumn(player.Mark) {
+	} else if r.checkColumn(player.Mark, pos) {
 		return "win"
 	} else if r.checkLRDiagonal(player.Mark) {
 		return "win"
